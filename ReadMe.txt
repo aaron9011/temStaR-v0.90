@@ -1,6 +1,6 @@
 Package: ‘temStaR’
 Title: Tempered Stable Distribution
-Version 0.9011
+Version 0.90
 
 Author
 Aaron Y.S. Kim [aut, cre]
