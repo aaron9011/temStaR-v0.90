@@ -1,0 +1,16 @@
+person(given = "Aaron Y.S.",
+       family = "Kim",
+       role = c("aut", "cre", "cph"),
+       email = "aaron.kim@girininst.com",
+       comment = c(URL = "https://www.girininst.com/about.html")
+)
+
+ c(
+      person(
+      given = "Aaron Y.S.",
+      family = "Kim",
+      role = c("aut", "cre", "cph"),
+      email = "aaron.kim@girininst.com",
+      comment = c(URL = "https://www.girininst.com/about.html")
+      )
+)
