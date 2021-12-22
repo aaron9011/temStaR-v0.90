@@ -1,6 +1,6 @@
 Package: temStaR
 Title: Tempered Stable Distribution
-Version: 0.9011
+Version: 0.90
 Authors@R: c(person("Aaron Y.S.", "Kim", role = c("aut", "cre", "cph"),
                      email = "aaron.kim@girininst.com"))
 Author: Aaron Y.S. Kim [aut, cre]
