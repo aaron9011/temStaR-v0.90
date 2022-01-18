@@ -327,6 +327,10 @@ changeCovMtx2Rho <- function(CovMtx, alpha, theta, betaVec){
   return(Rho)
 }
 
+#' @export
+#' @title fitstdntsFixAlphaThata
+#' @description Fit beta of stdNTS distribution with fixed alpha and theta.
+#'
 fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, maxeval = 100, ksdensityflag = 1){
   if (is.nan(sum(initialparam))){
     init <- 0
