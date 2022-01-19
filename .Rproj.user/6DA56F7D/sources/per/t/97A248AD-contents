@@ -279,14 +279,6 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE ){
   }
   strPMNTS$beta <- betaVec
 
-  #strPMNTS$Rho <- (cov(stdRetData)-(2-strPMNTS$alpha)/(2*strPMNTS$theta)*(betaVec%*%t(betaVec)))
-  #print(strPMNTS$Rho)
-  #igam <- diag(as.numeric(1/gammaVec))
-  #strPMNTS$Rho <- igam%*%strPMNTS$Rho%*%igam
-
-  #print(strPMNTS$Rho)
-  #rho <- nearPD(strPMNTS$Rho, corr=TRUE)
-  #strPMNTS$Rho <- matrix(data = as.numeric(rho$mat), ncol = n, nrow = n)
   strPMNTS$Rho <- changeCovMtx2Rho(cov(stdRetData),
                                    strPMNTS$alpha,
                                    strPMNTS$theta,
@@ -297,6 +289,116 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE ){
   strPMNTS$beta <- as.numeric(strPMNTS$beta)
   return(strPMNTS)
 }
+
+#' @export
+#' @title fitmnts
+#' @description \code{fitmnts} fit parameters
+#' of the n-dimensional NTS distribution. A parallel version of fitmnts()
+#'
+#' @examples
+#' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
+#' library(foreach)
+#' library(doParallel)
+#' library(quantmod)
+#'
+#' getSymbols("^GSPC", src="yahoo", from = "2016-1-1", to = "2020-08-31")
+#' pr1 <- as.numeric(GSPC$GSPC.Adjusted)
+#' getSymbols("^DJI", src="yahoo", from = "2016-1-1", to = "2020-08-31")
+#' pr2 <- as.numeric(DJI$DJI.Adjusted)
+#'
+#' returndata <- matrix(data = c(diff(log(pr1)),diff(log(pr2))),
+#'                      ncol = 2, nrow = (length(pr1)-1))
+#'
+#' numofcluster  <- detectCores()
+#' cl <- makePSOCKcluster(numofcluster)
+#' registerDoParallel(cl)
+#' res <- fitmnts_par( returndata = returndata, n=2, parallelSocketCluster = cl )
+#' stopCluster(cl)
+#'
+fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, parallelSocketCluster = NULL ){
+  flag_sock  <- FALSE
+  if (is.null(parallelSocketCluster)){
+    numofcluster  <- detectCores()
+    parallelSocketCluster <- makePSOCKcluster(numofcluster)
+    registerDoParallel(parallelSocketCluster)
+    flag_sock <- TRUE
+  }
+
+  strPMNTS <- list(
+    ndim = n,
+    mu = matrix(data = 0, nrow = n, ncol = 1),
+    sigma = matrix(data = 1, nrow = n, ncol = 1),
+    alpha = 1,
+    theta = 1,
+    beta = matrix(data = 0, nrow = n, ncol = 1),
+    Rho = matrix( nrow = n, ncol = n),
+    CovMtx = matrix( nrow = n, ncol = n)
+  )
+
+  if( stdflag ){
+    stdRetData <- returndata
+    strPMNTS$CovMtx <- cor(returndata)
+  }
+  else{
+    strPMNTS$CovMtx <- cov(returndata)
+    strPMNTS$mu <- matrix(data = colMeans(returndata), nrow = n, ncol = 1)
+    strPMNTS$sigma <- matrix(data = sqrt(diag(strPMNTS$CovMtx)), nrow = n, ncol = 1)
+    muMtx <- t(matrix(data = strPMNTS$mu, nrow = n, ncol = length(returndata[,1])))
+    sigmaMtx <- t(matrix(data = strPMNTS$sigma, nrow = n, ncol = length(returndata[,1])))
+    stdRetData <- (returndata-muMtx)/sigmaMtx
+  }
+
+  athb <- matrix(nrow = n, ncol = 3)
+  if (is.null(alphaNtheta)){
+
+    res_par <- foreach(k = 1:n) %dopar% {
+      library(temStaR)
+      stdntsparam <- fitstdnts(stdRetData[,k])
+      return(stdntsparam)
+    }
+
+    for( k in 1:n ){
+      athb[k,1] <- res_par[[k]][1]
+      athb[k,2] <- res_par[[k]][2]
+      athb[k,3] <- res_par[[k]][3]
+    }
+    alphaNtheta = c(mean(athb[,1]), mean(athb[,2]))
+  }
+  strPMNTS$alpha <- alphaNtheta[1]
+  strPMNTS$theta <- alphaNtheta[2]
+
+  bet_par <- foreach(k = 1:n) %dopar% {
+    library(temStaR)
+    beta <- fitstdntsFixAlphaThata(stdRetData[,k], alpha = strPMNTS$alpha, theta = strPMNTS$theta)
+    return(beta)
+  }
+
+  betaVec <- matrix(nrow = n, ncol = 1)
+  for( k in 1:n ){
+    betaVec[k,1] <- bet_par[[k]]
+  }
+  strPMNTS$beta <- betaVec
+
+  strPMNTS$Rho <- changeCovMtx2Rho(cov(stdRetData),
+                                   strPMNTS$alpha,
+                                   strPMNTS$theta,
+                                   betaVec)
+
+  strPMNTS$mu <- as.numeric(strPMNTS$mu)
+  strPMNTS$sigma <- as.numeric(strPMNTS$sigma)
+  strPMNTS$beta <- as.numeric(strPMNTS$beta)
+
+  if(flag_sock){
+    stopCluster(parallelSocketCluster)
+  }
+  return(strPMNTS)
+}
+
+
 
 #' @export
 #' @title getGammaVec
