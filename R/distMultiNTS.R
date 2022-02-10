@@ -459,8 +459,8 @@ fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, ma
                            x = x,
                            cemp = y,
                            dispF = 0),
-                         lower = -1,
-                         upper = 1,
+                         lower = -0.9999,
+                         upper = 0.9999,
                          control = nloptr::nl.opts(list(maxeval = maxeval)))
 
   beta  <-  ntsp$par*sz(alpha, theta)
