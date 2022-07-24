@@ -615,6 +615,8 @@ moments_stdNTS <-function (param){
     return( m4 )
 }
 
+# change stdntsparam  to ntsparam
+#' @export
 change_stdntsparam2ntsparam <-function(stdparam, mu, sig, dt = 1){
   a = stdparam[1]
   th = stdparam[2]
@@ -626,6 +628,8 @@ change_stdntsparam2ntsparam <-function(stdparam, mu, sig, dt = 1){
   return( ntsparam )
 }
 
+# change ntsparam to stdntsparam
+#' @export
 change_ntsparam2stdntsparam <-function(ntsparam){
   if (length(ntsparam)==3){
     a = ntsparam[1] #alpha

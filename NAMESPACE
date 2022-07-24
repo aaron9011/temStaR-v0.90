@@ -2,6 +2,8 @@
 
 export(cffitnts)
 export(changeCovMtx2Rho)
+export(change_ntsparam2stdntsparam)
+export(change_stdntsparam2ntsparam)
 export(chf_NTS)
 export(chf_stdNTS)
 export(copulaStdNTS)
