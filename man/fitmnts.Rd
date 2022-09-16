@@ -73,7 +73,7 @@ res <- fitmnts( returndata = returndata, n=2 )
 
 #Fix alpha and theta.
 #Estimate alpha dna theta from DJIA and use those parameter for IBM, INTC parameter fit.
-getSymbols("^DJI", src="yahoo", from = "2020-8-25", to = "2020-08-31")
+getSymbols("^DJI", src="yahoo", from = "2016-1-1", to = "2020-08-31")
 prDJ <- as.numeric(DJI$DJI.Adjusted)
 ret <- diff(log(prDJ))
 ntsparam <-  fitnts(ret)

@@ -1,0 +1,26 @@
+{
+    "id": "DAB1B569",
+    "path": "~/GitHub/temStaR-v0.90/R/distMultiNTS.R",
+    "project_path": "R/distMultiNTS.R",
+    "type": "r_source",
+    "hash": "3903809593",
+    "contents": "",
+    "dirty": false,
+    "created": 1663355105062.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "221,34",
+        "scrollLine": "218"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1663355181,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1663355181871,
+    "read_only": false,
+    "read_only_alternatives": []
+}
