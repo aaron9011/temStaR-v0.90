@@ -295,8 +295,8 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
   }
 
   ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
-                         lower = c(0.0001, 0.0001, -1),
-                         upper = c(1.999,  1000, 1),
+                         lower = c(0.0001, 0.0001, -0.9999),
+                         upper = c(1.9999,  1000, 0.9999),
                          control = nloptr::nl.opts(list(maxeval = maxeval)))
 
   ntsp$par[3] <- ntsp$par[3]*sz(ntsp$par[1], ntsp$par[2])
@@ -375,8 +375,8 @@ fitstdnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag 
   }
 
   ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
-                         lower = c(0.0001, 0.0001, -1),
-                         upper = c(1.999,  1000, 1),
+                         lower = c(0.0001, 0.0001, -0.9999),
+                         upper = c(1.9999,  1000, 0.9999),
                          control = nloptr::nl.opts(list(maxeval = maxeval)))
 
   ntsp$par[3]  <-  ntsp$par[3]*sz(ntsp$par[1], ntsp$par[2])
@@ -615,6 +615,8 @@ moments_stdNTS <-function (param){
     return( m4 )
 }
 
+# change stdntsparam  to ntsparam
+#' @export
 change_stdntsparam2ntsparam <-function(stdparam, mu, sig, dt = 1){
   a = stdparam[1]
   th = stdparam[2]
@@ -626,6 +628,8 @@ change_stdntsparam2ntsparam <-function(stdparam, mu, sig, dt = 1){
   return( ntsparam )
 }
 
+# change ntsparam to stdntsparam
+#' @export
 change_ntsparam2stdntsparam <-function(ntsparam){
   if (length(ntsparam)==3){
     a = ntsparam[1] #alpha
