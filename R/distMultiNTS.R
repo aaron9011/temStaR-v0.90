@@ -207,6 +207,7 @@ rmnts_subord <- function( strPMNTS, numofsample, rW = NaN, rTau = NaN )
 #' library(spatstat)
 #' library(Matrix)
 #' library(quantmod)
+#' library(temStaR)
 #'
 #' getSymbols("^GSPC", src="yahoo", from = "2016-1-1", to = "2020-08-31")
 #' pr1 <- as.numeric(GSPC$GSPC.Adjusted)
@@ -304,6 +305,7 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE ){
 #' library(foreach)
 #' library(doParallel)
 #' library(quantmod)
+#' library(temStaR)
 #'
 #' getSymbols("^GSPC", src="yahoo", from = "2016-1-1", to = "2020-08-31")
 #' pr1 <- as.numeric(GSPC$GSPC.Adjusted)
@@ -522,6 +524,8 @@ llhfntsFixAlphaTheta <- function(betaparam, alpha, theta, x, cemp, dispF = 0){
 #'
 #' @examples
 #' library(mvtnorm)
+#' library(temStaR)
+#'
 #' strPMNTS <- list(ndim = 2,
 #'               mu = c( 0.5, -1.5 ),
 #'               sigma = c( 2, 3 ),

@@ -25,6 +25,7 @@ library(Matrix)
 library(foreach)
 library(doParallel)
 library(quantmod)
+library(temStaR)
 
 getSymbols("^GSPC", src="yahoo", from = "2016-1-1", to = "2020-08-31")
 pr1 <- as.numeric(GSPC$GSPC.Adjusted)

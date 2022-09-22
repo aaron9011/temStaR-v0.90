@@ -1,26 +1,26 @@
 {
-    "id": "6E5279FE",
-    "path": "~/GitHub/temStaR-v0.90/genDoc.R",
-    "project_path": "genDoc.R",
+    "id": "DCE3958E",
+    "path": "~/GitHub/temStaR-v0.90/R/distNTS.R",
+    "project_path": "R/distNTS.R",
     "type": "r_source",
-    "hash": "4122861158",
+    "hash": "0",
     "contents": "",
     "dirty": false,
-    "created": 1663861940370.0,
+    "created": 1663863316877.0,
     "source_on_save": false,
-    "relative_order": 2,
+    "relative_order": 4,
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "0,0",
-        "scrollLine": "0"
+        "cursorPosition": "632,27",
+        "scrollLine": "625"
     },
     "folds": "",
-    "lastKnownWriteTime": 1640202203,
+    "lastKnownWriteTime": 1658673923,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1640202203,
+    "last_content_update": 1658673923,
     "read_only": false,
     "read_only_alternatives": []
 }
