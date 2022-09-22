@@ -9,7 +9,8 @@ fitmnts_par(
   n,
   alphaNtheta = NULL,
   stdflag = FALSE,
-  parallelSocketCluster = NULL
+  parallelSocketCluster = NULL,
+  PDflag = TRUE
 )
 }
 \description{

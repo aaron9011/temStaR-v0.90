@@ -236,7 +236,7 @@ rmnts_subord <- function( strPMNTS, numofsample, rW = NaN, rTau = NaN )
 #'                 n = 2,
 #'                 alphaNtheta = c(ntsparam["alpha"], ntsparam["theta"])  )
 #'
-fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE ){
+fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, PDflag = TRUE ){
   strPMNTS <- list(
     ndim = n,
     mu = matrix(data = 0, nrow = n, ncol = 1),
@@ -283,7 +283,8 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE ){
   strPMNTS$Rho <- changeCovMtx2Rho(cov(stdRetData),
                                    strPMNTS$alpha,
                                    strPMNTS$theta,
-                                   betaVec)
+                                   betaVec,
+                                   PDflag)
 
   strPMNTS$mu <- as.numeric(strPMNTS$mu)
   strPMNTS$sigma <- as.numeric(strPMNTS$sigma)
@@ -321,7 +322,7 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE ){
 #' res <- fitmnts_par( returndata = returndata, n=2, parallelSocketCluster = cl )
 #' stopCluster(cl)
 #'
-fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, parallelSocketCluster = NULL ){
+fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, parallelSocketCluster = NULL, PDflag = TRUE ){
   flag_sock  <- FALSE
   if (is.null(parallelSocketCluster)){
     numofcluster  <- detectCores()
@@ -388,7 +389,8 @@ fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, par
   strPMNTS$Rho <- changeCovMtx2Rho(cov(stdRetData),
                                    strPMNTS$alpha,
                                    strPMNTS$theta,
-                                   betaVec)
+                                   betaVec,
+                                   PDflag)
 
   strPMNTS$mu <- as.numeric(strPMNTS$mu)
   strPMNTS$sigma <- as.numeric(strPMNTS$sigma)
@@ -419,14 +421,14 @@ getGammaVec <- function(alpha, theta, betaVec){
 #' @title changeCovMtx2Rho
 #' @description Change covariance matrix to Rho matrix.
 #'
-changeCovMtx2Rho <- function(CovMtx, alpha, theta, betaVec, PD = FALSE){
+changeCovMtx2Rho <- function(CovMtx, alpha, theta, betaVec, PDflag = TRUE){
   n <- length(betaVec)
   gammaVec <- getGammaVec(alpha, theta, betaVec)
 
   Rho <- (CovMtx-(2-alpha)/(2*theta)*(betaVec%*%t(betaVec)))
   igam <- diag(as.numeric(1/gammaVec))
   Rho <- igam%*%Rho%*%igam
-  if( PD == TRUE ){
+  if( PDflag == TRUE ){
     pd <- nearPD(Rho, corr=TRUE)
     Rho <- matrix(data = as.numeric(pd$mat), ncol = n, nrow = n)
   }
