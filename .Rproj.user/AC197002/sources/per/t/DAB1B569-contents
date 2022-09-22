@@ -415,19 +415,17 @@ getGammaVec <- function(alpha, theta, betaVec){
 
 #' @export
 #' @title changeCovMtx2Rho
-#' @description Change covariance matrix to Rho matrix.
+#' @description Change coverance matrix to Rho matrix.
 #'
-changeCovMtx2Rho <- function(CovMtx, alpha, theta, betaVec, PD = FALSE){
+changeCovMtx2Rho <- function(CovMtx, alpha, theta, betaVec){
   n <- length(betaVec)
   gammaVec <- getGammaVec(alpha, theta, betaVec)
 
   Rho <- (CovMtx-(2-alpha)/(2*theta)*(betaVec%*%t(betaVec)))
   igam <- diag(as.numeric(1/gammaVec))
   Rho <- igam%*%Rho%*%igam
-  if( PD == TRUE ){
-    pd <- nearPD(Rho, corr=TRUE)
-    Rho <- matrix(data = as.numeric(pd$mat), ncol = n, nrow = n)
-  }
+  pd <- nearPD(Rho, corr=TRUE)
+  Rho <- matrix(data = as.numeric(pd$mat), ncol = n, nrow = n)
   return(Rho)
 }
 
@@ -461,8 +459,8 @@ fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, ma
                            x = x,
                            cemp = y,
                            dispF = 0),
-                         lower = -0.9999,
-                         upper = 0.9999,
+                         lower = -1,
+                         upper = 1,
                          control = nloptr::nl.opts(list(maxeval = maxeval)))
 
   beta  <-  ntsp$par*sz(alpha, theta)
