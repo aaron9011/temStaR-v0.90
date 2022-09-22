@@ -1,17 +1,19 @@
 {
-    "id": "043FCDD9",
-    "path": "~/GitHub/temStaR-v0.90/R/distCTS.R",
-    "project_path": "R/distCTS.R",
+    "id": "6E5279FE",
+    "path": "~/GitHub/temStaR-v0.90/genDoc.R",
+    "project_path": "genDoc.R",
     "type": "r_source",
-    "hash": "0",
+    "hash": "4122861158",
     "contents": "",
     "dirty": false,
-    "created": 1663863312982.0,
+    "created": 1663861940370.0,
     "source_on_save": false,
-    "relative_order": 3,
+    "relative_order": 2,
     "properties": {
         "source_window_id": "",
-        "Source": "Source"
+        "Source": "Source",
+        "cursorPosition": "3,0",
+        "scrollLine": "0"
     },
     "folds": "",
     "lastKnownWriteTime": 1640202203,
