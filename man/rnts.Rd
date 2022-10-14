@@ -4,7 +4,7 @@
 \alias{rnts}
 \title{rnts}
 \usage{
-rnts(n, ntsparam)
+rnts(n, ntsparam, u = NULL)
 }
 \arguments{
 \item{n}{number of random numbers to be generated.}

@@ -55,8 +55,7 @@ qsubTS <- function(u, subtsparam, maxt = 50, du = 0.01){
 #' @export
 #' @description rand of TS Subordinator
 rsubTS <- function(n, subtsparam, maxt = 50, du = 0.01){
-  #u <- rand(1,n)
-  u <- matrix(data = runif(n), nrow = 1, ncol = n)
+  u <- pracma::rand(1,n)
   r <- ipsubTS(u, subtsparam, maxt, du)
   return( c(r) )
 }

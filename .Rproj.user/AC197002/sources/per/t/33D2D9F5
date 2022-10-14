@@ -3,7 +3,7 @@
     "path": "~/GitHub/temStaR-v0.90/R/distSubTS.R",
     "project_path": "R/distSubTS.R",
     "type": "r_source",
-    "hash": "817856165",
+    "hash": "4205439157",
     "contents": "",
     "dirty": false,
     "created": 1665778875470.0,
@@ -12,15 +12,15 @@
     "properties": {
         "source_window_id": "",
         "Source": "Source",
-        "cursorPosition": "53,0",
-        "scrollLine": "50"
+        "cursorPosition": "58,2",
+        "scrollLine": "53"
     },
     "folds": "",
-    "lastKnownWriteTime": 1665778998,
+    "lastKnownWriteTime": 1665781928,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1665778998081,
+    "last_content_update": 1665781928006,
     "read_only": false,
     "read_only_alternatives": []
 }

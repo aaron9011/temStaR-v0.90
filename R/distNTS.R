@@ -216,8 +216,10 @@ qnts <- function(u, ntsparam){
 #' ntsparam <- c(alpha, theta, beta, gamma, mu, dt)
 #' r <- rnts(100, ntsparam) #generate 100 NTS random numbers
 #' plot(r)
-rnts <- function(n, ntsparam){
-  u <- pracma::rand(1,n)
+rnts <- function(n, ntsparam, u = NULL){
+  if (is.null(u)){
+    u <- pracma::rand(1,n)
+  }
   r <- ipnts(u, ntsparam)
   return( c(r) )
 }

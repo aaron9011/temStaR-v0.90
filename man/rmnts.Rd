@@ -4,7 +4,7 @@
 \alias{rmnts}
 \title{rmnts}
 \usage{
-rmnts(strMnts, numofsample)
+rmnts(strMnts, numofsample, u = NULL)
 }
 \arguments{
 \item{numofsample}{number of samples.}

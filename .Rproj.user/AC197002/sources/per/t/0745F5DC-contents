@@ -43,7 +43,7 @@
 #' gensim <- rmnts( strPMNTS, 100 )
 #' plot(gensim)
 #'
-rmnts <- function(strMnts, numofsample){
+rmnts <- function(strMnts, numofsample, u = NULL){
   N <- strMnts$ndim
   al <- strMnts$alpha
   th <- strMnts$theta
@@ -51,11 +51,11 @@ rmnts <- function(strMnts, numofsample){
   gamma <- sqrt(1-beta^2*(2-strMnts$alpha)/(2*strMnts$theta))
   L <- t(chol(strMnts$Rho))
   X <- matrix(nrow = numofsample, ncol = N)
-  X[,1] = rnts(numofsample, c(al, th, beta[1]))
+  X[,1] = rnts(numofsample, c(al, th, beta[1]), u)
   for (n in 2:N){
     betatilde <- beta[n]-gamma[n]*sum(beta[1:(n-1)]*L[n,1:(n-1)]/gamma[1:(n-1)])
     gammatilde <- gamma[n]*L[n,n]
-    Xtilde <- matrix(data=rnts(numofsample, c(al, th, betatilde, gammatilde, 0)),
+    Xtilde <- matrix(data=rnts(numofsample, c(al, th, betatilde, gammatilde, 0), u),
                      nrow = numofsample, ncol = 1)
 
     b <- matrix(data=gamma[n]*L[n,1:(n-1)]/gamma[1:(n-1)],
@@ -128,10 +128,7 @@ rmnts_subord <- function( strPMNTS, numofsample, rW = NULL, rTau = NULL )
   # \Rho Correlation metrix of N-dim standard normal distribution
 {
     if( is.null(rW) ){
-    #rW <- randn(numofsample, strPMNTS$ndim)
-    rW <- matrix(data = rnorm(numofsample*strPMNTS$ndim),
-                 nrow = numofsample,
-                 ncol = strPMNTS$ndim)
+    rW <- pracma::randn(numofsample, strPMNTS$ndim)
   }
 
   if( is.null(rTau) ){
