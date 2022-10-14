@@ -43,6 +43,8 @@ where
 }
 \examples{
 library(mvtnorm)
+library(temStaR)
+
 strPMNTS <- list(ndim = 2,
               mu = c( 0.5, -1.5 ),
               sigma = c( 2, 3 ),
