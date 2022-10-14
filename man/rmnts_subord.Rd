@@ -4,7 +4,7 @@
 \alias{rmnts_subord}
 \title{rmnts_subord}
 \usage{
-rmnts_subord(strPMNTS, numofsample, rW = NaN, rTau = NaN)
+rmnts_subord(strPMNTS, numofsample, rW = NULL, rTau = NULL)
 }
 \arguments{
 \item{strPMNTS}{Structure of parameters for the n-dimensional NTS distribution.

@@ -116,7 +116,7 @@ rmnts <- function(strMnts, numofsample){
 #' gensim <- rmnts_subord( strPMNTS, 100 )
 #' plot(gensim)
 #'
-rmnts_subord <- function( strPMNTS, numofsample, rW = NaN, rTau = NaN )
+rmnts_subord <- function( strPMNTS, numofsample, rW = NULL, rTau = NULL )
   # r = \mu + \sigma X
   # X = \beta-1+\sqrt(\tau) \gamma^T \epsilon
   # \mu = [\mu_1, \mu_2, \cdots, \mu_N]^T
@@ -127,11 +127,14 @@ rmnts_subord <- function( strPMNTS, numofsample, rW = NaN, rTau = NaN )
   # \epsilon \sim N(0,\Rho)
   # \Rho Correlation metrix of N-dim standard normal distribution
 {
-    if( is.nan(rW) ){
-    rW <- randn(numofsample, strPMNTS$ndim)
+    if( is.null(rW) ){
+    #rW <- randn(numofsample, strPMNTS$ndim)
+    rW <- matrix(data = rnorm(numofsample*strPMNTS$ndim),
+                 nrow = numofsample,
+                 ncol = strPMNTS$ndim)
   }
 
-  if( is.nan(rTau) ){
+  if( is.null(rTau) ){
     rTau <- rsubTS(numofsample, c(strPMNTS$alpha, strPMNTS$theta) )
   }
   #print(rW)
