@@ -140,7 +140,7 @@ rmnts_subord <- function( strPMNTS, numofsample, rW = NULL, rTau = NULL )
   gamma <- sqrt(1-beta^2*(2-strPMNTS$alpha)/(2*strPMNTS$theta))
   gamma <- matrix(data = gamma, nrow = 1, ncol = N)
   reps <- t(t(chol(strPMNTS$Rho))%*%t(rW))
-  rstdmnts <- (rTau-1)%*%beta+reps%*%diag(as.numeric(gamma), N, N)
+  rstdmnts <- (rTau-1)%*%beta+sqrt(rTau)*(reps%*%diag(as.numeric(gamma), N, N))
   #print(rstdmnts%*%diag(as.numeric(strPMNTS$sigma), N, N))
   res_rmnts <- rstdmnts%*%diag(as.numeric(strPMNTS$sigma), N, N) + t(matrix(data=as.numeric(strPMNTS$mu), nrow = N, ncol = numofsample))
 
