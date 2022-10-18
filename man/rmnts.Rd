@@ -4,11 +4,9 @@
 \alias{rmnts}
 \title{rmnts}
 \usage{
-rmnts(strMnts, numofsample, u = NULL)
+rmnts(strPMNTS, numofsample, rW = NULL, rTau = NULL)
 }
 \arguments{
-\item{numofsample}{number of samples.}
-
 \item{strPMNTS}{Structure of parameters for the n-dimensional NTS distribution.
 
 \code{strPMNTS$ndim} : dimension
@@ -24,12 +22,14 @@ rmnts(strMnts, numofsample, u = NULL)
 \code{strPMNTS$beta} : \eqn{\beta} vector (column vector) of the std NTS distribution (X).
 
 \code{strPMNTS$Rho} : \eqn{\rho} matrix of the std NTS distribution (X).}
+
+\item{numofsample}{number of samples.}
 }
 \value{
 Simulated NTS random vectors
 }
 \description{
-\code{rmnts} generates random vector following the n dimensional NTS distribution using Cholesky decomposition.
+\code{rmnts} generates random vector following the n dimensional NTS distribution using subordination.
 
 \eqn{r = \mu + diag(\sigma) X},
 

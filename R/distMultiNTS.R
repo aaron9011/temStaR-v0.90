@@ -1,6 +1,7 @@
+
 #' @export
 #' @title rmnts
-#' @description \code{rmnts} generates random vector following the n dimensional NTS distribution using Cholesky decomposition.
+#' @description \code{rmnts} generates random vector following the n dimensional NTS distribution using subordination.
 #'
 #' \eqn{r = \mu + diag(\sigma) X},
 #'
@@ -43,80 +44,7 @@
 #' gensim <- rmnts( strPMNTS, 100 )
 #' plot(gensim)
 #'
-rmnts <- function(strMnts, numofsample, u = NULL){
-  N <- strMnts$ndim
-  al <- strMnts$alpha
-  th <- strMnts$theta
-  beta <- strMnts$beta
-  gamma <- sqrt(1-beta^2*(2-strMnts$alpha)/(2*strMnts$theta))
-  L <- t(chol(strMnts$Rho))
-  X <- matrix(nrow = numofsample, ncol = N)
-  X[,1] = rnts(numofsample, c(al, th, beta[1]), u)
-  for (n in 2:N){
-    betatilde <- beta[n]-gamma[n]*sum(beta[1:(n-1)]*L[n,1:(n-1)]/gamma[1:(n-1)])
-    gammatilde <- gamma[n]*L[n,n]
-    Xtilde <- matrix(data=rnts(numofsample, c(al, th, betatilde, gammatilde, 0), u),
-                     nrow = numofsample, ncol = 1)
-
-    b <- matrix(data=gamma[n]*L[n,1:(n-1)]/gamma[1:(n-1)],
-                nrow = n-1, ncol = 1)
-    Xb <- X[,1:(n-1)]%*%b
-    X[,n] <- Xtilde+Xb
-  }
-  Y <- matrix(nrow = numofsample, ncol = N)
-
-  mu <- t(matrix(strMnts$mu, nrow = N, ncol = numofsample))
-  sigma <- t(matrix(strMnts$sigma, nrow = N, ncol = numofsample))
-  Y <- mu+sigma*X
-  return(Y)
-}
-
-#' @export
-#' @title rmnts_subord
-#' @description \code{rmnts_subord} generates random vector following the n dimensional NTS distribution using subordination.
-#'
-#' \eqn{r = \mu + diag(\sigma) X},
-#'
-#' where
-#'
-#' \eqn{X} follows \eqn{stdNTS_n(\alpha, \theta, \beta, \Sigma)}
-#'
-#' @param strPMNTS Structure of parameters for the n-dimensional NTS distribution.
-#'
-#' \code{strPMNTS$ndim} : dimension
-#'
-#' \code{strPMNTS$mu} : \eqn{\mu} mean vector (column vector) of the input data.
-#'
-#' \code{strPMNTS$sigma} : \eqn{\sigma} standard deviation vector (column vector) of the input data.
-#'
-#' \code{strPMNTS$alpha} : \eqn{\alpha} of the std NTS distribution (X).
-#'
-#' \code{strPMNTS$theta} : \eqn{\theta} of the std NTS distribution (X).
-#'
-#' \code{strPMNTS$beta} : \eqn{\beta} vector (column vector) of the std NTS distribution (X).
-#'
-#' \code{strPMNTS$Rho} : \eqn{\rho} matrix of the std NTS distribution (X).
-#'
-#' @param numofsample number of samples.
-#'
-#' @return Simulated NTS random vectors
-#' @references
-#' Kim, Y. S. (2020) Portfolio Optimization on the Dispersion Risk and the Asymmetric Tail Risk
-#' \url{https://arxiv.org/pdf/2007.13972.pdf}
-#'
-#' @examples
-#' strPMNTS <- list(ndim = 2,
-#'                  mu = c( 0.00011, 0.00048 ),
-#'                  sigma = c( 0.0162, 0.0231 ),
-#'                  alpha = 1.23,
-#'                  theta = 3.607,
-#'                  beta =  c( -0.1209,  0.0905 ),
-#'                  Rho = matrix( data = c(1.0, 0.55, 0.55, 1.0), nrow = 2, ncol = 2)
-#' )
-#' gensim <- rmnts_subord( strPMNTS, 100 )
-#' plot(gensim)
-#'
-rmnts_subord <- function( strPMNTS, numofsample, rW = NULL, rTau = NULL )
+rmnts <- function( strPMNTS, numofsample, rW = NULL, rTau = NULL )
   # r = \mu + \sigma X
   # X = \beta-1+\sqrt(\tau) \gamma^T \epsilon
   # \mu = [\mu_1, \mu_2, \cdots, \mu_N]^T
