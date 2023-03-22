@@ -1,0 +1,31 @@
+Package: temStaR
+Title: Tempered Stable Distribution
+Version: 0.90
+Authors@R: c(person("Aaron Y.S.", "Kim", role = c("aut", "cre", "cph"),
+                     email = "aaron.kim@girininst.com"))
+Author: Aaron Y.S. Kim [aut, cre]
+Maintainer: Aaron Y.S. Kim <aaron.kim@girininst.com>
+Description: This package provides useful tools to use the multivariate normal tempered stable distribution and process
+License: `use_mit_license()`
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Imports:
+  functional,
+  nloptr,
+  pracma,
+  spatstat,
+  Matrix,
+  mvtnorm,
+  doParallel,
+  foreach
+Suggests:
+  functional,
+  nloptr,
+  pracma,
+  spatstat,
+  Matrix,
+  mvtnorm,
+  doParallel,
+  foreach

@@ -1,0 +1,26 @@
+{
+    "id": "40559CF6",
+    "path": "~/GitHub/temStaR_0.90/R/distCTS.R",
+    "project_path": "R/distCTS.R",
+    "type": "r_source",
+    "hash": "2915806953",
+    "contents": "",
+    "dirty": false,
+    "created": 1679528821432.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "200,13",
+        "scrollLine": "194"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1679528868,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1679528868367,
+    "read_only": false,
+    "read_only_alternatives": []
+}
