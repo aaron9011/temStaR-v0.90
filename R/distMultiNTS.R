@@ -380,7 +380,7 @@ fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, ma
     y = Femp(x)
   } else{
     ks <- density(rawdat)
-    cdfks <- spatstat.core::CDF(ks)
+    cdfks <- CDF(ks)
     x <- ks$x
     y <- cdfks(x)
   }
