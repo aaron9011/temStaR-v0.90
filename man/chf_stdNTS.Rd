@@ -22,6 +22,11 @@ If a time parameter value is given, it calculates Ch.F of the standard NTS profe
 by the standard NTS distribution with parameters \eqn{(\alpha, \theta, \beta)}.
 }
 \examples{
+#' library(functional)
+library(nloptr)
+library(pracma)
+library(spatstat)
+library(Matrix)
 library("temStaR")
 alpha <- 1.2
 theta <- 1

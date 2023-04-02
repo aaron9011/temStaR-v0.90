@@ -18,7 +18,12 @@
 #' Kim, Y. S. (2020) Portfolio Optimization on the Dispersion Risk and the Asymmetric Tail Risk
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #'
-#' @examples
+#' @examples#
+#' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
 #' library("temStaR")
 #'
 #' alpha <- 1.2
@@ -78,6 +83,11 @@ dnts <- function( xdata, ntsparam ){
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #'
 #' @examples
+#' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
 #' library("temStaR")
 #'
 #' alpha <- 1.2
@@ -136,6 +146,11 @@ pnts <- function( xdata, ntsparam,
 #' @return The quantile function of the NTS distribution
 #' @export
 #' @examples
+#' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
 #' library("temStaR")
 #'
 #' alpha <- 1.2
@@ -186,6 +201,11 @@ qnts <- function(u, ntsparam){
 #' Kim, Y. S. (2020) Portfolio Optimization on the Dispersion Risk and the Asymmetric Tail Risk
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #' @examples
+#' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
 #' library("temStaR")
 #'
 #' alpha <- 1.2
@@ -338,6 +358,12 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
 #' Kim, Y. S. (2020) Portfolio Optimization on the Dispersion Risk and the Asymmetric Tail Risk
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #' @examples
+#' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
+#' library(quantmod)
 #' library("temStaR")
 #' library("quantmod")
 #' getSymbols("^GSPC", src="yahoo", from = "2010-1-1", to = "2020-12-31")
@@ -400,6 +426,11 @@ fitstdnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag 
 #'
 #' @return Characteristic function of the NTS distribution
 #' @examples
+#' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
 #' library("temStaR")
 #' alpha <- 1.2
 #' theta <- 1
@@ -455,6 +486,11 @@ chf_NTS <- function(u, param){
 #'
 #' @return Characteristic function of the standatd NTS distribution
 #' @examples
+#' #' library(functional)
+#' library(nloptr)
+#' library(pracma)
+#' library(spatstat)
+#' library(Matrix)
 #' library("temStaR")
 #' alpha <- 1.2
 #' theta <- 1
