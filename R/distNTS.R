@@ -274,10 +274,10 @@ rnts <- function(n, ntsparam, u = NULL){
 #' Kim, Y. S. (2020) Portfolio Optimization on the Dispersion Risk and the Asymmetric Tail Risk
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #' @examples
-#' library("evmix")
+#' library(evmix)
 #' library("temStaR")
 #' library("quantmod")
-#' getSymbols("^GSPC", src="yahoo", from = "2010-1-1", to = "2020-12-31")
+#' getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")
 #' pr <- as.numeric(GSPC$GSPC.Adjusted)
 #' ret <- diff(log(pr))
 #' ntsparam <-  fitnts(ret)
@@ -364,12 +364,12 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
 #' library(nloptr)
 #' library(pracma)
 #' library(spatstat)
-#' library("evmix")
+#' library(evmix)
 #' library(Matrix)
 #' library(quantmod)
 #' library("temStaR")
 #' library("quantmod")
-#' getSymbols("^GSPC", src="yahoo", from = "2010-1-1", to = "2020-12-31")
+#' getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")
 #' pr <- as.numeric(GSPC$GSPC.Adjusted)
 #' ret <- diff(log(pr))
 #' stdret <- (ret-mean(ret))/sd(ret)
