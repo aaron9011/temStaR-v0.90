@@ -7,7 +7,7 @@
 mctStdDev(n, w, covMtx)
 }
 \arguments{
-\item{n}{The targer stock to calculate the mctCVaR}
+\item{n}{The targer stock to calculate the mctStdDev}
 
 \item{w}{The capital allocation rate vector for the current portfolio}
 

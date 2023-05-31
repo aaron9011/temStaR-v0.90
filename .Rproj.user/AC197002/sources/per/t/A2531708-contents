@@ -182,7 +182,7 @@ portfolioCVaRmnts <- function(strPMNTS, w, eta){
 #' @description
 #' Morginal contribution to Risk for Standard Deviation.
 #'
-#' @param n The targer stock to calculate the mctStdDev
+#' @param n The targer stock to calculate the mctCVaR
 #' @param w The capital allocation rate vector for the current portfolio
 #' @param CovMtx Covariance matrix of return data.
 #'
@@ -241,7 +241,7 @@ dinvCdf_stdNTS_int <- function(eta, x = NULL, alpha, theta, beta){
 
   denom <- dnts(x,  c(alpha, theta, beta))
   nom <- dFdBeta_eta(x, eta, alpha, theta, beta)
-
+  
   return(-nom/denom)
 }
 
@@ -346,7 +346,7 @@ mctVaR_MNTS <- function(n, eta, w, stmnts, iCDFstd = NULL ){
   mcts <- mctStdDev(n, w, stmnts$CovMtx)
   db <- dBeta(n, w, stmnts$beta, stmnts$CovMtx)
   barBeta <- sum(w*stmnts$beta)
-  if (is.null(iCDFstd))
+  if (is.null(iCDFstd)) 
     iCDFstd <- ipnts(eta, ntsparam = c(stmnts$alpha, stmnts$theta, barBeta))
   dicdf <- dinvCdf_stdNTS_int(eta, iCDFstd, stmnts$alpha, stmnts$theta, barBeta)
   return(-stmnts$mu[n] - iCDFstd*mcts - barsig*db*dicdf )
@@ -369,7 +369,7 @@ integrand_dCVaRstdNTS <- function( u, eta, alpha, theta, beta, cv = NULL, v = NU
 #' Developer's version.
 #'
 dCVaRstdNTS_numint <- function( eta, alpha, theta, beta, cv = NULL, v = NULL, N = 20, rho = 0.0001 ){
-
+  
   if (is.null(cv)) cv <-  cvarnts(eps = eta, ntsparam = c(alpha, theta, beta))
   if (is.null(v)) v <- ipnts(u = eta, ntsparam = c(alpha, theta, beta))
   fn <- Re(pracma::integral(functional::Curry(integrand_dCVaRstdNTS,
@@ -464,9 +464,9 @@ mctCVaR_MNTS <- function(n, eta, w, stmnts, CVaRstd=NULL, dCVaRstd=NULL, iCDFstd
   barBeta <- sum(w*stmnts$beta)
   if (is.null(iCDFstd)) iCDFstd <- ipnts(eta, c(stmnts$alpha, stmnts$theta, barBeta))
   if (is.null(CVaRstd)) CVaRstd <- cvarnts(eps = eta, ntsparam = c(stmnts$alpha, stmnts$theta, barBeta))
-  if (is.null(dCVaRstd))
+  if (is.null(dCVaRstd)) 
     dCVaRstd <- dCVaRstdNTS_numint(eta, stmnts$alpha, stmnts$theta, barBeta, cv = CVaRstd, v = iCDFstd)
-
+  
   barsig <-  sqrt(w%*%stmnts$CovMtx%*%t(w))
   mcts <- mctStdDev(n, w, stmnts$CovMtx)
   db <- dBeta(n, w, stmnts$beta, stmnts$CovMtx)
