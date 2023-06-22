@@ -32,9 +32,16 @@ Estimated parameters
 This function using the curvefit method between the empirical cdf and the standard NTS cdf.
 }
 \examples{
+library(functional)
+library(nloptr)
+library(pracma)
+library(spatstat)
+library(evmix)
+library(Matrix)
+library(quantmod)
 library("temStaR")
 library("quantmod")
-getSymbols("^GSPC", src="yahoo", from = "2010-1-1", to = "2020-12-31")
+getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")
 pr <- as.numeric(GSPC$GSPC.Adjusted)
 ret <- diff(log(pr))
 stdret <- (ret-mean(ret))/sd(ret)
