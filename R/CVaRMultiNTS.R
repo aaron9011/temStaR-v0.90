@@ -139,6 +139,7 @@ portfolioVaRmnts <- function(strPMNTS, w, eta){
   return(VaR)
 }
 
+
 #' @export
 #' @title portfolioCVaRmnts
 #' @description
@@ -572,4 +573,81 @@ setPortfolioParam <- function(strPMNTS, w){
   th <- as.numeric(strPMNTS$theta)
   param <- change_ntsparam2stdntsparam(c(a, th, b, g, m))
   return(param)
+}
+
+
+
+#' @export
+#' @title portfolioVaRETmnts
+#' @description
+#' Calculate portfolio value at return on the NTS market model
+#'
+#' @param strPMNTS Structure of parameters for the n-dimensional NTS distribution.
+#'
+#' \code{strPMNTS$ndim} : dimension
+#'
+#' \code{strPMNTS$mu} : \eqn{\mu} mean vector (column vector) of the input data.
+#'
+#' \code{strPMNTS$sigma} : \eqn{\sigma} standard deviation vector (column vector) of the input data.
+#'
+#' \code{strPMNTS$alpha} : \eqn{\alpha} of the std NTS distribution (X).
+#'
+#' \code{strPMNTS$theta} : \eqn{\theta} of the std NTS distribution (X).
+#'
+#' \code{strPMNTS$beta} : \eqn{\beta} vector (column vector) of the std NTS distribution (X).
+#'
+#' \code{res$Rho} : \eqn{\rho} matrix (Correlation) of the std NTS distribution (X).
+#'
+#' \code{res$Sigma} : Covariance \eqn{\Sigma} matrix of return data \eqn{r}.
+#'
+#' @param w Capital allocation weight vector.
+#' @param eta significanlt level
+#' @return portfolio value at Return on the NTS market model
+#'
+portfolioVaRETmnts <- function(strPMNTS, w, eta){
+  if(strPMNTS$ndim != length(w)){
+    print("The dimension of the weight vector must be the same as strPMNTS$ndim")
+    return(NULL)
+  }
+  ntsparam <- getPortNTSParam(strPMNTS, w)
+  VaRet <- ( ntsparam$mu + ntsparam$sig * VaRetnts(eta, ntsparam$stdparam))
+  return(VaRet)
+}
+
+
+#' @export
+#' @title portfolioCVaRETmnts
+#' @description
+#' Calculate portfolio conditional value at Return on the NTS market model
+#'
+#' @param strPMNTS Structure of parameters for the n-dimensional NTS distribution.
+#'
+#' \code{strPMNTS$ndim} : dimension
+#'
+#' \code{strPMNTS$mu} : \eqn{\mu} mean vector (column vector) of the input data.
+#'
+#' \code{strPMNTS$sigma} : \eqn{\sigma} standard deviation vector (column vector) of the input data.
+#'
+#' \code{strPMNTS$alpha} : \eqn{\alpha} of the std NTS distribution (X).
+#'
+#' \code{strPMNTS$theta} : \eqn{\theta} of the std NTS distribution (X).
+#'
+#' \code{strPMNTS$beta} : \eqn{\beta} vector (column vector) of the std NTS distribution (X).
+#'
+#' \code{res$Rho} : \eqn{\rho} matrix (Correlation) of the std NTS distribution (X).
+#'
+#' \code{res$Sigma} : Covariance \eqn{\Sigma} matrix of return data \eqn{r}.
+#'
+#' @param w Capital allocation weight vector.
+#' @param eta significanlt level
+#' @return portfolio value at Return on the NTS market model
+#'
+portfolioCVaRETmnts <- function(strPMNTS, w, eta){
+  if(strPMNTS$ndim != length(w)){
+    print("The dimension of the weight vector must be the same as strPMNTS$ndim")
+    return(NULL)
+  }
+  ntsparam <- getPortNTSParam(strPMNTS, w)
+  CVaRet <- (ntsparam$mu + ntsparam$sig * cvaretnts(eta, ntsparam$stdparam))
+  return(CVaRet)
 }

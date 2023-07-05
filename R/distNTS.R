@@ -901,6 +901,119 @@ cvarnts <- function( eps, ntsparam ){
   return(cvar)
 }
 
+#' @export
+#' @title cvaretnts
+#' @description \code{cvaretnts} calculates Conditional Value at Risk (CVaR, or expected shortfall ES)
+#' of the NTS market model with parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' If only three parameters are given, it calculates CVaR
+#' of the standard NTS distribution with parameter \eqn{(\alpha, \theta, \beta)}
+#'
+#' @param eps the significant level for CVaR. Real value between 0 and 1.
+#' @param ntsparam A vector of the NTS parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' A vector of the standard NTS parameters \eqn{(\alpha, \theta, \beta)}.
+#'
+#' @return CVaReturn of the NTS distribution.
+#' @references
+#' Y. S. Kim, S. T. Rachev, M. L. Bianchi, and F. J. Fabozzi (2010), Computing VaR and AVaR in infinitely divisible distributions, Probability and Mathematical Statistics, 30 (2), 223-245.
+#'
+#' S. T. Rachev, Y. S. Kim, M. L. Bianchi, and F. J. Fabozzi (2011), Financial Models with Levy Processes and Volatility Clustering, John Wiley & Sons
+#'
+#' @examples
+#' library("temStaR")
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' ntsparam <- c(alpha, theta, beta)
+#' u <- c(0.01,0.05)
+#' q <- cvaretnts(u, ntsparam)
+#'
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' ntsparam <- c(alpha, theta, beta, gamma, mu)
+#' u <- c(0.01,0.05)
+#' q <- cvaretnts(u, ntsparam)
+#'
+#'
+#' #Annual based parameters
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' #scaling annual parameters to one day
+#' dt <- 1/250 #one day
+#' ntsparam <- c(alpha, theta, beta, gamma, mu, dt)
+#' u <- c(0.01,0.05)
+#' q <- cvaretnts(u, ntsparam)
+#'
+cvaretnts <- function( eps, ntsparam ){
+  newparam = change_ntsparam2stdntsparam( ntsparam )
+  nparam <- c(newparam$stdparam[1], newparam$stdparam[2], -newparam$stdparam[3])
+  varetstd = -qnts(eps, nparam)
+  cvaretstd = avar_numint(eps, varetstd, nparam, functional::Curry(chf_stdNTS))
+  cvaret = newparam$mu + newparam$sig*cvaretstd
+  return(cvaret)
+}
+
+#' @export
+#' @title VaRetnts
+#' @description \code{VaRetnts} calculates Conditional Value at Risk (CVaR, or expected shortfall ES)
+#' of the NTS market model with parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' If only three parameters are given, it calculates CVaR
+#' of the standard NTS distribution with parameter \eqn{(\alpha, \theta, \beta)}
+#'
+#' @param eps the significant level for CVaR. Real value between 0 and 1.
+#' @param ntsparam A vector of the NTS parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' A vector of the standard NTS parameters \eqn{(\alpha, \theta, \beta)}.
+#'
+#' @return Value at Return of the NTS distribution.
+#' @references
+#' Y. S. Kim, S. T. Rachev, M. L. Bianchi, and F. J. Fabozzi (2010), Computing VaR and AVaR in infinitely divisible distributions, Probability and Mathematical Statistics, 30 (2), 223-245.
+#'
+#' S. T. Rachev, Y. S. Kim, M. L. Bianchi, and F. J. Fabozzi (2011), Financial Models with Levy Processes and Volatility Clustering, John Wiley & Sons
+#'
+#' @examples
+#' library("temStaR")
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' ntsparam <- c(alpha, theta, beta)
+#' u <- c(0.01,0.05)
+#' q <- VaRetnts(u, ntsparam)
+#'
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' ntsparam <- c(alpha, theta, beta, gamma, mu)
+#' u <- c(0.01,0.05)
+#' q <- VaRetnts(u, ntsparam)
+#'
+#'
+#' #Annual based parameters
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' #scaling annual parameters to one day
+#' dt <- 1/250 #one day
+#' ntsparam <- c(alpha, theta, beta, gamma, mu, dt)
+#' u <- c(0.01,0.05)
+#' q <- VaRetnts(u, ntsparam)
+#'
+VaRetnts <- function( eps, ntsparam ){
+  newparam = change_ntsparam2stdntsparam( ntsparam )
+  nparam <- c(newparam$stdparam[1], newparam$stdparam[2], -newparam$stdparam[3])
+  varetstd = -qnts(eps, nparam)
+  varet = newparam$mu + newparam$sig*varetstd
+  return(varet)
+}
+
 
 
 # NTS fit using Characteristic function
