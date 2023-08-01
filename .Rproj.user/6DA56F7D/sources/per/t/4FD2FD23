@@ -1,0 +1,26 @@
+{
+    "id": "4FD2FD23",
+    "path": "~/GitHub/temStaR-v0.90/R/CVaRMultiNTS.R",
+    "project_path": "R/CVaRMultiNTS.R",
+    "type": "r_source",
+    "hash": "4148634853",
+    "contents": "",
+    "dirty": false,
+    "created": 1690905377637.0,
+    "source_on_save": false,
+    "relative_order": 3,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "191,1",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1688586143,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1688586143,
+    "read_only": false,
+    "read_only_alternatives": []
+}
