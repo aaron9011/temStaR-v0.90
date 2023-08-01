@@ -609,10 +609,7 @@ moments_NTS <- function(param){
   cm[1] = m*1i;
   cm[2] = b^2*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1) - gm^2;
   cm[3] = - b^3*th^(1 - al/2)*th^(al/2 - 3)*(al/2 - 1)*(al/2 - 2)*1i + b*gm^2*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1)*3i;
-
-  cm[4] = 6*b^2*gm^2*th^(1 - al/2)*th^(al/2 - 3)*(al/2 - 1)*(al/2 - 2)
-    - 3*gm^4*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1)
-    - b^4*th^(1 - al/2)*th^(al/2 - 4)*(al/2 - 1)*(al/2 - 2)*(al/2 - 3);
+  cm[4] = 6*b^2*gm^2*th^(1 - al/2)*th^(al/2 - 3)*(al/2 - 1)*(al/2 - 2) - 3*gm^4*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1) - b^4*th^(1 - al/2)*th^(al/2 - 4)*(al/2 - 1)*(al/2 - 2)*(al/2 - 3);
 
   cm = cm/c(1i, (1i)^2, (1i)^3, (1i)^4);
 
