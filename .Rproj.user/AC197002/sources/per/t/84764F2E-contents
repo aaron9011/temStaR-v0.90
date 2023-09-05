@@ -274,9 +274,10 @@ rnts <- function(n, ntsparam, u = NULL){
 #' Kim, Y. S. (2020) Portfolio Optimization on the Dispersion Risk and the Asymmetric Tail Risk
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #' @examples
+#' library(evmix)
 #' library("temStaR")
 #' library("quantmod")
-#' getSymbols("^GSPC", src="yahoo", from = "2010-1-1", to = "2020-12-31")
+#' getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")
 #' pr <- as.numeric(GSPC$GSPC.Adjusted)
 #' ret <- diff(log(pr))
 #' ntsparam <-  fitnts(ret)
@@ -307,9 +308,10 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
 
   if(ksdensityflag == 1){
     ks <- density(obs)
-    cdfks <- CDF(ks)
+    #cdfks <- CDF(ks)
     x <- ks$x
-    y <- cdfks(x)
+    #y <- cdfks(x)
+    y <- pkden(x,obs)
   } else{
     Femp = ecdf(obs)
     x = seq(from=min(obs), to = max(obs), length = 1000)
@@ -362,11 +364,12 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
 #' library(nloptr)
 #' library(pracma)
 #' library(spatstat)
+#' library(evmix)
 #' library(Matrix)
 #' library(quantmod)
 #' library("temStaR")
 #' library("quantmod")
-#' getSymbols("^GSPC", src="yahoo", from = "2010-1-1", to = "2020-12-31")
+#' getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")
 #' pr <- as.numeric(GSPC$GSPC.Adjusted)
 #' ret <- diff(log(pr))
 #' stdret <- (ret-mean(ret))/sd(ret)
@@ -397,9 +400,10 @@ fitstdnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag 
     y = Femp(x)
   } else{
     ks <- density(rawdat)
-    cdfks <- CDF(ks)
+    #cdfks <- CDF(ks)
     x <- ks$x
-    y <- cdfks(x)
+    #y <- cdfks(x)
+    y <- pkden(x,rawdat)
   }
 
   ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
@@ -521,10 +525,7 @@ chf_stdNTS = function(u, param){
   } else {
     dt = 1
   }
-  y = exp( dt*(
-    1i*(m-b)*u
-    - 2*th^(1-a/2)/a
-      *((th-1i*(b*u+1i*g^2*u^2/2))^(a/2)-th^(a/2) ) ) )
+  y = exp( dt*( 1i*(m-b)*u - 2*th^(1-a/2)/a*((th-1i*(b*u+1i*g^2*u^2/2))^(a/2)-th^(a/2) ) ) )
   return( y )
 }
 
@@ -606,9 +607,7 @@ moments_NTS <- function(param){
   cm[2] = b^2*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1) - gm^2;
   cm[3] = - b^3*th^(1 - al/2)*th^(al/2 - 3)*(al/2 - 1)*(al/2 - 2)*1i + b*gm^2*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1)*3i;
 
-  cm[4] = 6*b^2*gm^2*th^(1 - al/2)*th^(al/2 - 3)*(al/2 - 1)*(al/2 - 2)
-    - 3*gm^4*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1)
-    - b^4*th^(1 - al/2)*th^(al/2 - 4)*(al/2 - 1)*(al/2 - 2)*(al/2 - 3);
+  cm[4] = 6*b^2*gm^2*th^(1 - al/2)*th^(al/2 - 3)*(al/2 - 1)*(al/2 - 2) - 3*gm^4*th^(1 - al/2)*th^(al/2 - 2)*(al/2 - 1) - b^4*th^(1 - al/2)*th^(al/2 - 4)*(al/2 - 1)*(al/2 - 2)*(al/2 - 3);
 
   cm = cm/c(1i, (1i)^2, (1i)^3, (1i)^4);
 
@@ -895,6 +894,119 @@ cvarnts <- function( eps, ntsparam ){
   cvarstd = avar_numint(eps, varstd, newparam$stdparam, functional::Curry(chf_stdNTS))
   cvar = -newparam$mu + newparam$sig*cvarstd
   return(cvar)
+}
+
+#' @export
+#' @title cvaretnts
+#' @description \code{cvaretnts} calculates Conditional Value at Risk (CVaR, or expected shortfall ES)
+#' of the NTS market model with parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' If only three parameters are given, it calculates CVaR
+#' of the standard NTS distribution with parameter \eqn{(\alpha, \theta, \beta)}
+#'
+#' @param eps the significant level for CVaR. Real value between 0 and 1.
+#' @param ntsparam A vector of the NTS parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' A vector of the standard NTS parameters \eqn{(\alpha, \theta, \beta)}.
+#'
+#' @return CVaReturn of the NTS distribution.
+#' @references
+#' Y. S. Kim, S. T. Rachev, M. L. Bianchi, and F. J. Fabozzi (2010), Computing VaR and AVaR in infinitely divisible distributions, Probability and Mathematical Statistics, 30 (2), 223-245.
+#'
+#' S. T. Rachev, Y. S. Kim, M. L. Bianchi, and F. J. Fabozzi (2011), Financial Models with Levy Processes and Volatility Clustering, John Wiley & Sons
+#'
+#' @examples
+#' library("temStaR")
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' ntsparam <- c(alpha, theta, beta)
+#' u <- c(0.01,0.05)
+#' q <- cvaretnts(u, ntsparam)
+#'
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' ntsparam <- c(alpha, theta, beta, gamma, mu)
+#' u <- c(0.01,0.05)
+#' q <- cvaretnts(u, ntsparam)
+#'
+#'
+#' #Annual based parameters
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' #scaling annual parameters to one day
+#' dt <- 1/250 #one day
+#' ntsparam <- c(alpha, theta, beta, gamma, mu, dt)
+#' u <- c(0.01,0.05)
+#' q <- cvaretnts(u, ntsparam)
+#'
+cvaretnts <- function( eps, ntsparam ){
+  newparam = change_ntsparam2stdntsparam( ntsparam )
+  nparam <- c(newparam$stdparam[1], newparam$stdparam[2], -newparam$stdparam[3])
+  varetstd = -qnts(eps, nparam)
+  cvaretstd = avar_numint(eps, varetstd, nparam, functional::Curry(chf_stdNTS))
+  cvaret = newparam$mu + newparam$sig*cvaretstd
+  return(cvaret)
+}
+
+#' @export
+#' @title VaRetnts
+#' @description \code{VaRetnts} calculates Conditional Value at Risk (CVaR, or expected shortfall ES)
+#' of the NTS market model with parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' If only three parameters are given, it calculates CVaR
+#' of the standard NTS distribution with parameter \eqn{(\alpha, \theta, \beta)}
+#'
+#' @param eps the significant level for CVaR. Real value between 0 and 1.
+#' @param ntsparam A vector of the NTS parameters \eqn{(\alpha, \theta, \beta, \gamma, \mu)}.
+#' A vector of the standard NTS parameters \eqn{(\alpha, \theta, \beta)}.
+#'
+#' @return Value at Return of the NTS distribution.
+#' @references
+#' Y. S. Kim, S. T. Rachev, M. L. Bianchi, and F. J. Fabozzi (2010), Computing VaR and AVaR in infinitely divisible distributions, Probability and Mathematical Statistics, 30 (2), 223-245.
+#'
+#' S. T. Rachev, Y. S. Kim, M. L. Bianchi, and F. J. Fabozzi (2011), Financial Models with Levy Processes and Volatility Clustering, John Wiley & Sons
+#'
+#' @examples
+#' library("temStaR")
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' ntsparam <- c(alpha, theta, beta)
+#' u <- c(0.01,0.05)
+#' q <- VaRetnts(u, ntsparam)
+#'
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' ntsparam <- c(alpha, theta, beta, gamma, mu)
+#' u <- c(0.01,0.05)
+#' q <- VaRetnts(u, ntsparam)
+#'
+#'
+#' #Annual based parameters
+#' alpha <- 1.2
+#' theta <- 1
+#' beta <- -0.2
+#' gamma <- 0.3
+#' mu <- 0.1
+#' #scaling annual parameters to one day
+#' dt <- 1/250 #one day
+#' ntsparam <- c(alpha, theta, beta, gamma, mu, dt)
+#' u <- c(0.01,0.05)
+#' q <- VaRetnts(u, ntsparam)
+#'
+VaRetnts <- function( eps, ntsparam ){
+  newparam = change_ntsparam2stdntsparam( ntsparam )
+  nparam <- c(newparam$stdparam[1], newparam$stdparam[2], -newparam$stdparam[3])
+  varetstd = -qnts(eps, nparam)
+  varet = newparam$mu + newparam$sig*varetstd
+  return(varet)
 }
 
 
