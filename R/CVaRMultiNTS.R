@@ -88,7 +88,7 @@ getPortNTSParam <- function(strPMNTS, w, stdform = TRUE){
     print("The dimension of the weight vector must be the same as strPMNTS$ndim")
     return(NULL)
   }
-  w <- matrix(data = w, nrow = strPMNTS$ndim, ncol = 1)
+  w <- matrix(data = as.numeric(w), nrow = strPMNTS$ndim, ncol = 1)
   sigmaBar <- as.numeric(sqrt(t(w)%*%strPMNTS$CovMtx%*%w))
   mbar <- sum(w*strPMNTS$mu)
   betbar <- sum(w*strPMNTS$sigma*strPMNTS$beta)/sigmaBar
@@ -188,7 +188,7 @@ portfolioCVaRmnts <- function(strPMNTS, w, eta){
 #' @param CovMtx Covariance matrix of return data.
 #'
 mctStdDev <- function(n, w, covMtx){
-  w <- matrix(data = w, nrow = length(w), ncol = 1)
+  w <- matrix(data = as.numeric(w), nrow = length(w), ncol = 1)
   sig <-  sqrt(t(w)%*%covMtx%*%w)
   return( t(w)%*%covMtx[,n]/sig )
 }
@@ -200,7 +200,7 @@ mctStdDev <- function(n, w, covMtx){
 #' Developer's version.
 #'
 dBeta <- function(n, w, betaArray, covMtx){
-  w <- matrix(data = w, nrow = length(w), ncol = 1)
+  w <- matrix(data = as.numeric(w), nrow = length(w), ncol = 1)
   barsig <-  sqrt(t(w)%*%covMtx%*%w)
   barBeta <- sum(w*betaArray)
   mctsd <- mctStdDev(n, w, covMtx)
@@ -345,7 +345,7 @@ dCVaR_numint <- function( eta, alpha, theta, beta, N = 200, rho = 0.1 ){
 #' mctVaR_MNTS(2, eta, w, st) #MCT-VaR for INTL
 #'
 mctVaR_MNTS <- function(n, eta, w, stmnts, iCDFstd = NULL ){
-  w <- matrix(data = w, nrow = length(w), ncol = 1)
+  w <- matrix(data = as.numeric(w), nrow = length(w), ncol = 1)
   barsig <-  sqrt(t(w)%*%stmnts$CovMtx%*%w)
   mcts <- mctStdDev(n, w, stmnts$CovMtx)
   db <- dBeta(n, w, stmnts$beta, stmnts$CovMtx)
@@ -465,7 +465,7 @@ dCVaRstdNTS_numint <- function( eta, alpha, theta, beta, cv = NULL, v = NULL, N 
 #' mctCVaR_MNTS(2, eta, w, st) #MCT-CVaR for INTL
 #'
 mctCVaR_MNTS <- function(n, eta, w, stmnts, CVaRstd=NULL, dCVaRstd=NULL, iCDFstd = NULL){
-  w <- matrix(data = w, nrow = length(w), ncol = 1)
+  w <- matrix(data = as.numeric(w), nrow = length(w), ncol = 1)
   barBeta <- sum(w*stmnts$beta)
   if (is.null(iCDFstd)) iCDFstd <- ipnts(eta, c(stmnts$alpha, stmnts$theta, barBeta))
   if (is.null(CVaRstd)) CVaRstd <- cvarnts(eps = eta, ntsparam = c(stmnts$alpha, stmnts$theta, barBeta))
@@ -567,7 +567,7 @@ setPortfolioParam <- function(strPMNTS, w){
     print("The dimension of the weight vector must be the same as strPMNTS$ndim")
     return(NULL)
   }
-  w <- matrix(data = w, nrow = strPMNTS$ndim, ncol = 1)
+  w <- matrix(data = as.numeric(w), nrow = strPMNTS$ndim, ncol = 1)
   m <- sum(w*strPMNTS$mu)
   b <- sum(w*strPMNTS$sigma*strPMNTS$beta)
   gammaMtx <- diag(as.numeric(sqrt(1-strPMNTS$beta^2*(2-strPMNTS$alpha)/(2*strPMNTS$theta))))
