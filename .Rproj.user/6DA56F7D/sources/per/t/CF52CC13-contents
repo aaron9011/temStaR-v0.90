@@ -222,8 +222,8 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, PDflag 
 }
 
 #' @export
-#' @title fitmnts
-#' @description \code{fitmnts} fit parameters
+#' @title fitmnts_par
+#' @description \code{fitmnts_par} fit parameters
 #' of the n-dimensional NTS distribution. A parallel version of fitmnts()
 #'
 #' @examples
@@ -290,6 +290,8 @@ fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, par
 
     res_par <- foreach(k = 1:n) %dopar% {
       library(temStaR)
+      library(spatstat)
+      library(spatstat.core)
       stdntsparam <- fitstdnts(stdRetData[,k])
       return(stdntsparam)
     }
@@ -306,6 +308,8 @@ fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, par
 
   bet_par <- foreach(k = 1:n) %dopar% {
     library(temStaR)
+    library(spatstat)
+    library(spatstat.core)
     beta <- fitstdntsFixAlphaThata(stdRetData[,k], alpha = strPMNTS$alpha, theta = strPMNTS$theta)
     return(beta)
   }

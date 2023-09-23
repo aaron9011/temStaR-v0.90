@@ -2,7 +2,7 @@
 % Please edit documentation in R/distMultiNTS.R
 \name{fitmnts_par}
 \alias{fitmnts_par}
-\title{fitmnts}
+\title{fitmnts_par}
 \usage{
 fitmnts_par(
   returndata,
@@ -14,7 +14,7 @@ fitmnts_par(
 )
 }
 \description{
-\code{fitmnts} fit parameters
+\code{fitmnts_par} fit parameters
 of the n-dimensional NTS distribution. A parallel version of fitmnts()
 }
 \examples{
