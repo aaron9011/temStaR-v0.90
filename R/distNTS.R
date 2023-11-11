@@ -275,6 +275,7 @@ rnts <- function(n, ntsparam, u = NULL){
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #' @examples
 #' library(evmix)
+#' library(spatstat)
 #' library("temStaR")
 #' library("quantmod")
 #' getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")

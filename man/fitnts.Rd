@@ -34,6 +34,7 @@ This function using the curvefit method between the empirical cdf and the NTS cd
 }
 \examples{
 library(evmix)
+library(spatstat)
 library("temStaR")
 library("quantmod")
 getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")
