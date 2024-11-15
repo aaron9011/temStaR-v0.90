@@ -1,0 +1,34 @@
+{
+    "type": [
+        2,
+        2,
+        0,
+        1,
+        3,
+        0,
+        1,
+        3,
+        0,
+        1,
+        2,
+        2,
+        2,
+        2
+    ],
+    "data": [
+        "\nR version 4.2.3 (2023-03-15 ucrt) -- \"Shortstop Beagle\"\nCopyright (C) 2023 The R Foundation for Statistical Computing\nPlatform: x86_64-w64-mingw32/x64 (64-bit)\n\nR is free software and comes with ABSOLUTELY NO WARRANTY.\nYou are welcome to redistribute it under certain conditions.\nType 'license()' or 'licence()' for distribution details.\n\n  Natural language support but running in an English locale\n\nR is a collaborative project with many contributors.\nType 'contributors()' for more information and\n'citation()",
+        "' on how to cite R or R packages in publications.\n\nType 'demo()' for some demos, 'help()' for on-line help, or\n'help.start()' for an HTML browser interface to help.\nType 'q()' to quit R.\n\n",
+        "> ",
+        "source(\"~/GitHub/temStaR_0.90/genDoc.R\")",
+        "Error in loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]) : \n  namespace ‘cli’ 3.4.1 is already loaded, but >= 3.6.1 is required\n",
+        "> ",
+        "devtools::load_all(\".\")",
+        "Error in loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]) : \n  namespace ‘cli’ 3.4.1 is already loaded, but >= 3.6.1 is required\n",
+        "> ",
+        "install.packages(\"cli\")",
+        "Error in install.packages : Updating loaded packages\n\nRestarting R session...\n\n",
+        "Error in install.packages : Updating loaded packages\n\nRestarting R session...\n\n",
+        "Error in install.packages : Updating loaded packages\n\nRestarting R session...\n\n",
+        "Error in install.packages : Updating loaded packages\n\nRestarting R session...\n\n"
+    ]
+}

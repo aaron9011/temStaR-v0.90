@@ -1,0 +1,8 @@
+build-last-errors="[]"
+build-last-errors-base-dir=""
+build-last-outputs="[{\"type\":0,\"output\":\"==> devtools::document(roclets = c('rd', 'collate', 'namespace'))\\n\\n\"},{\"type\":2,\"output\":\"Error in loadNamespace(j <- i[[1L]], c(lib.loc, .libPaths()), versionCheck = vI[[j]]) : \\r\\n  namespace 'cli' 3.4.1 is already loaded, but >= 3.6.1 is required\\r\\nCalls: suppressPackageStartupMessages ... namespaceImportFrom -> asNamespace -> loadNamespace\\r\\nExecution halted\\r\\n\"},{\"type\":2,\"output\":\"\\nExited with status 1.\\n\\n\"}]"
+compile_pdf_state="{\"tab_visible\":false,\"running\":false,\"target_file\":\"\",\"output\":\"\",\"errors\":[]}"
+files.monitored-path=""
+find-in-files-state="{\"handle\":\"\",\"input\":\"\",\"path\":\"\",\"regex\":false,\"ignoreCase\":false,\"results\":{\"file\":[],\"line\":[],\"lineValue\":[],\"matchOn\":[],\"matchOff\":[],\"replaceMatchOn\":[],\"replaceMatchOff\":[]},\"running\":false,\"replace\":false,\"preview\":false,\"gitFlag\":false,\"replacePattern\":\"\"}"
+imageDirtyState="1"
+saveActionState="0"

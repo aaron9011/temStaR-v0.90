@@ -275,6 +275,7 @@ rnts <- function(n, ntsparam, u = NULL){
 #' \url{https://arxiv.org/pdf/2007.13972.pdf}
 #' @examples
 #' library(evmix)
+#' library(spatstat)
 #' library("temStaR")
 #' library("quantmod")
 #' getSymbols("^GSPC", src="yahoo", from = "2013-1-1", to = "2023-12-31")
@@ -308,10 +309,10 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
 
   if(ksdensityflag == 1){
     ks <- density(obs)
-    #cdfks <- CDF(ks)
+    cdfks <- CDF(ks)
     x <- ks$x
-    #y <- cdfks(x)
-    y <- pkden(x,obs)
+    y <- cdfks(x)
+    #y <- pkden(x,obs)
   } else{
     Femp = ecdf(obs)
     x = seq(from=min(obs), to = max(obs), length = 1000)
@@ -400,10 +401,10 @@ fitstdnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag 
     y = Femp(x)
   } else{
     ks <- density(rawdat)
-    #cdfks <- CDF(ks)
+    cdfks <- CDF(ks)
     x <- ks$x
-    #y <- cdfks(x)
-    y <- pkden(x,rawdat)
+    y <- cdfks(x)
+    #y <- pkden(x,rawdat)
   }
 
   ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
