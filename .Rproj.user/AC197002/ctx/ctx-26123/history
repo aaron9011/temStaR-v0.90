@@ -1,0 +1,14 @@
+source("~/GitHub/temStaR-v0.90/genDoc.R")
+a = (3)
+a = (3
+-1
+)
+a
+source("~/GitHub/temStaR_0.90/genDoc.R")
+source("~/GitHub/temStaR_0.90/genDoc.R")
+plot(density(c(-20, rep(0,98), 20)), xlim = c(-4, 4))
+source("~/GitHub/temStaR-v0.90/genDoc.R")
+source("~/GitHub/temStaR-v0.90/genDoc.R")
+source("~/GitHub/temStaR_0.90/genDoc.R")
+devtools::load_all(".")
+install.packages("cli")

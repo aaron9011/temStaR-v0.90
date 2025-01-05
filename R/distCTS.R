@@ -69,7 +69,7 @@ fitcts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
   return( retparam )
 }
 
-
+#' @export
 chf_CTS <- function(u, param){
   alpha = param[1]
   C     = param[2]
