@@ -294,7 +294,7 @@ rnts <- function(n, ntsparam, u = NULL){
 #' plot(x,p,type = 'l', col = "red")
 #' lines(a,type = 'l', col = "blue")
 #'
-fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1){
+fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 0){
   if (is.nan(sum(initialparam))){
     init = c(0.99, 2, 0)
   } else {
