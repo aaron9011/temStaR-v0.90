@@ -265,8 +265,8 @@ rnts <- function(n, ntsparam, u = NULL){
 #' The function \code{cffitnts()} may be helpful to find the initial parameters.
 #' @param maxeval Maximum evaluation number for \code{nloptr}. The iteration stops on this many function evaluations.
 #' @param ksdensityflag This function fit the parameters using the curvefit method between the empirical cdf and the NTS cdf.
-#' If \code{ksdensityflag = 1} (default), then the empirical cdf is calculated by the kernel density estimation.
-#' If \code{ksdensityflag = 0}, then the empirical cdf is calculated by the empirical cdf.
+#' If \code{ksdensityflag = 1}, then the empirical cdf is calculated by the kernel density estimation.
+#' If \code{ksdensityflag = 0} (default), then the empirical cdf is calculated by the empirical cdf.
 #'
 #'
 #' @return Estimated parameters
@@ -387,7 +387,7 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 0
 #' plot(x,p,type = 'l', col = "red", ylim = c(0, max(a$y, p)))
 #' lines(a,type = 'l', col = "blue")
 #'
-fitstdnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1){
+fitstdnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 0){
   if (is.nan(sum(initialparam))){
     init = c(0.99, 2, 0)
   } else {

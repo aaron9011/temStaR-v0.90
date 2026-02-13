@@ -22,8 +22,8 @@ The function \code{cffitnts()} may be helpful to find the initial parameters.}
 \item{maxeval}{Maximum evaluation number for \code{nloptr}. The iteration stops on this many function evaluations.}
 
 \item{ksdensityflag}{This function fit the parameters using the curvefit method between the empirical cdf and the NTS cdf.
-If \code{ksdensityflag = 1} (default), then the empirical cdf is calculated by the kernel density estimation.
-If \code{ksdensityflag = 0}, then the empirical cdf is calculated by the empirical cdf.}
+If \code{ksdensityflag = 1}, then the empirical cdf is calculated by the kernel density estimation.
+If \code{ksdensityflag = 0} (default), then the empirical cdf is calculated by the empirical cdf.}
 }
 \value{
 Estimated parameters

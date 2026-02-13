@@ -252,7 +252,7 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, PDflag 
 #' res <- fitmnts_par( returndata = returndata, n=2, parallelSocketCluster = cl )
 #' stopCluster(cl)
 #'
-fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, parallelSocketCluster = NULL, PDflag = TRUE ){
+fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, parallelSocketCluster = NULL, PDflag = TRUE, ksdensityflag = 0 ){
   flag_sock  <- FALSE
   if (is.null(parallelSocketCluster)){
     numofcluster  <- detectCores()
@@ -291,8 +291,8 @@ fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, par
     res_par <- foreach(k = 1:n) %dopar% {
       library(temStaR)
       library(spatstat)
-      library(spatstat.core)
-      stdntsparam <- fitstdnts(stdRetData[,k])
+      #library(spatstat.core)
+      stdntsparam <- fitstdnts(stdRetData[,k],ksdensityflag = 0)
       return(stdntsparam)
     }
 
@@ -309,7 +309,7 @@ fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, par
   bet_par <- foreach(k = 1:n) %dopar% {
     library(temStaR)
     library(spatstat)
-    library(spatstat.core)
+    #library(spatstat.core)
     beta <- fitstdntsFixAlphaThata(stdRetData[,k], alpha = strPMNTS$alpha, theta = strPMNTS$theta)
     return(beta)
   }
@@ -373,7 +373,7 @@ changeCovMtx2Rho <- function(CovMtx, alpha, theta, betaVec, PDflag = TRUE){
 #' @title fitstdntsFixAlphaThata
 #' @description Fit beta of stdNTS distribution with fixed alpha and theta.
 #'
-fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, maxeval = 100, ksdensityflag = 1){
+fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, maxeval = 100, ksdensityflag = 0){
   if (is.nan(sum(initialparam))){
     init <- 0
   } else {

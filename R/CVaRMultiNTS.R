@@ -357,14 +357,12 @@ mctVaR_MNTS <- function(n, eta, w, stmnts, iCDFstd = NULL ){
 }
 
 
-#integrand_dCVaRstdNTS <- function( u, eta, alpha, theta, beta, cv = NULL, v = NULL, rho = 0.0001 ){
-integrand_dCVaRstdNTS <- function( u, eta, alpha, theta, beta, rho = 0.0001 ){
+integrand_dCVaRstdNTS <- function( u, eta, alpha, theta, beta, cv = NULL, v = NULL, rho = 0.0001 ){
   param <- c(alpha, theta, beta)
   Finv <- ipnts(eta, param)
   res <- (exp((1i*u+rho)*Finv)*chf_stdNTS(-u+rho*1i, param))
   res <- res*psi_stdNTS(-u+1i*rho, alpha, theta, beta)
-  #res <- res*(1/(rho*1i-u)^2+(cv+v)/(u*1i+rho))
-  res <- res/((rho*1i-u)^2)
+  res <- res*(1/(rho*1i-u)^2+(cv+v)/(u*1i+rho))
   return(res)
 }
 
@@ -374,24 +372,22 @@ integrand_dCVaRstdNTS <- function( u, eta, alpha, theta, beta, rho = 0.0001 ){
 #' Calculate the marginal contribution to CVaR for the multivariate stdNTS Model.
 #' Developer's version.
 #'
-dCVaRstdNTS_numint <- function( eta, alpha, theta, beta, N = 20, rho = 0.0001 ){
-  #if (is.null(cv)) cv <-  cvarnts(eps = eta, ntsparam = c(alpha, theta, beta))
-  #if (is.null(v)) v <- ipnts(u = eta, ntsparam = c(alpha, theta, beta))
+dCVaRstdNTS_numint <- function( eta, alpha, theta, beta, cv = NULL, v = NULL, N = 20, rho = 0.0001 ){
+
+  if (is.null(cv)) cv <-  cvarnts(eps = eta, ntsparam = c(alpha, theta, beta))
+  if (is.null(v)) v <- ipnts(u = eta, ntsparam = c(alpha, theta, beta))
   fn <- Re(pracma::integral(functional::Curry(integrand_dCVaRstdNTS,
                                               eta = eta,
                                               alpha = alpha,
                                               theta = theta,
                                               beta = beta,
-                                              #cv = cv,
-                                              #v = v,
+                                              cv = cv,
+                                              v = v,
                                               rho = rho),
                             0, N))
   dcvar <- -fn/(pi*eta)
   return( dcvar )
 }
-
-
-
 
 #' @export
 #' @title mctCVaR_MNTS
@@ -468,15 +464,15 @@ dCVaRstdNTS_numint <- function( eta, alpha, theta, beta, N = 20, rho = 0.0001 ){
 #' mctCVaR_MNTS(1, eta, w, st) #MCT-CVaR for IBM
 #' mctCVaR_MNTS(2, eta, w, st) #MCT-CVaR for INTL
 #'
-mctCVaR_MNTS <- function(n, eta, w, stmnts, CVaRstd=NULL, dCVaRstd=NULL){
+mctCVaR_MNTS <- function(n, eta, w, stmnts, CVaRstd=NULL, dCVaRstd=NULL, iCDFstd = NULL){
+  w <- matrix(data = as.numeric(w), nrow = length(w), ncol = 1)
   barBeta <- sum(w*stmnts$beta)
-  #if (is.null(iCDFstd)) iCDFstd <- ipnts(eta, c(stmnts$alpha, stmnts$theta, barBeta))
+  if (is.null(iCDFstd)) iCDFstd <- ipnts(eta, c(stmnts$alpha, stmnts$theta, barBeta))
   if (is.null(CVaRstd)) CVaRstd <- cvarnts(eps = eta, ntsparam = c(stmnts$alpha, stmnts$theta, barBeta))
-  if (is.null(dCVaRstd)) 
-    #dCVaRstd <- dCVaRstdNTS_numint(eta, stmnts$alpha, stmnts$theta, barBeta, cv = CVaRstd, v = iCDFstd)
-    dCVaRstd <- dCVaRstdNTS_numint(eta, stmnts$alpha, stmnts$theta, barBeta)
-  
-  barsig <-  sqrt(w%*%stmnts$CovMtx%*%t(w))
+  if (is.null(dCVaRstd))
+    dCVaRstd <- dCVaRstdNTS_numint(eta, stmnts$alpha, stmnts$theta, barBeta, cv = CVaRstd, v = iCDFstd)
+
+  barsig <-  sqrt(t(w)%*%stmnts$CovMtx%*%w)
   mcts <- mctStdDev(n, w, stmnts$CovMtx)
   db <- dBeta(n, w, stmnts$beta, stmnts$CovMtx)
   return(-stmnts$mu[n] + CVaRstd*mcts + barsig*db*dCVaRstd )
