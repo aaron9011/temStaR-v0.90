@@ -362,7 +362,8 @@ integrand_dCVaRstdNTS <- function( u, eta, alpha, theta, beta, cv = NULL, v = NU
   Finv <- ipnts(eta, param)
   res <- (exp((1i*u+rho)*Finv)*chf_stdNTS(-u+rho*1i, param))
   res <- res*psi_stdNTS(-u+1i*rho, alpha, theta, beta)
-  res <- res*(1/(rho*1i-u)^2+(cv+v)/(u*1i+rho))
+  #res <- res*(1/(rho*1i-u)^2+(cv+v)/(u*1i+rho))
+  res <- res*(1/(rho*1i-u)^2)
   return(res)
 }
 
