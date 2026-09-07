@@ -29,7 +29,7 @@ pdf_FFT <- function(arg, param, chf, h = 2^-10,N = 2^17){
 
   x = (t1 - 1 - N/2)*h
 
-  arg <- sort(arg)
+  #arg <- sort(arg)
   f <- pracma::pchip(x, pdfft, arg)
   return( f )
 }
