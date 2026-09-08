@@ -173,10 +173,27 @@ portfolioCVaRmnts <- function(strPMNTS, w, eta){
     return(NULL)
   }
   ntsparam <- getPortNTSParam(strPMNTS, w)
+  #print("check21")
+  #print(w)
+  #print(ntsparam$stdparam)
   CVaR <- (- ntsparam$mu + ntsparam$sig * cvarnts(eta, ntsparam$stdparam))
+  #print(CVaR)
   return(CVaR)
 }
 
+portfolioCVaRmnts_debug2<- function( w, strPMNTS, eta){
+  if(strPMNTS$ndim != length(w)){
+    print("The dimension of the weight vector must be the same as strPMNTS$ndim")
+    return(NULL)
+  }
+  ntsparam <- getPortNTSParam(strPMNTS, w)
+  #print("check21")
+  #print(w)
+  #print(ntsparam$stdparam)
+  CVaR <- (- ntsparam$mu + ntsparam$sig * cvarnts(eta, ntsparam$stdparam))
+  #print(CVaR)
+  return(CVaR)
+}
 
 #' @export
 #' @title mctStdDev
@@ -223,12 +240,14 @@ int_phi_psi <- function(u, x, alpha, theta, beta, rho = 0.1){
 }
 
 dFdBeta_eta <- function(x, eta, alpha, theta, beta, rho = 0.1, N = 20){
-  fn <- pracma::integral(functional::Curry(int_phi_psi,
-                                           x = x,
-                                           alpha = alpha,
-                                           theta = theta,
-                                           beta = beta,
-                                           rho = rho), 0, N)
+#  fn <- pracma::integral(functional::Curry(int_phi_psi,
+#                                           x = x,
+#                                           alpha = alpha,
+#                                           theta = theta,
+#                                           beta = beta,
+#                                           rho = rho), 0, N)
+  integrand <- function(u) int_phi_psi(u, x = x, alpha = alpha, theta = theta, beta = beta, rho = rho)
+  fn <- pracma::integral(integrand, 0, N)
   dFdB <- Re(fn)*exp(rho*x)/pi
   return(dFdB)
 }
@@ -260,13 +279,15 @@ dinvCdf_stdNTS_int <- function(eta, x = NULL, alpha, theta, beta){
 #'
 dCVaR_numint <- function( eta, alpha, theta, beta, N = 200, rho = 0.1 ){
   dFinv <- dinvCdf_stdNTS(eta, alpha, theta, beta)
-  f <- Re(pracma::integral(functional::Curry(integrand_dCVaRstdNTS,
-                                             eta = eta,
-                                             alpha = alpha,
-                                             theta = theta,
-                                             beta = beta,
-                                             rho = rho),
-                           0, N))
+  #f <- Re(pracma::integral(functional::Curry(integrand_dCVaRstdNTS,
+  #                                           eta = eta,
+  #                                           alpha = alpha,
+  #                                           theta = theta,
+  #                                           beta = beta,
+  #                                           rho = rho),
+  #                         0, N))
+  integrand <- function(u) integrand_dCVaRstdNTS(u, eta = eta, alpha = alpha, theta = theta, beta = beta, rho = rho)
+  f <- Re(pracma::integral(integrand, 0, N))
   dcvar <- -dFinv-f/(pi*eta)
   return( dcvar )
 }
@@ -362,8 +383,7 @@ integrand_dCVaRstdNTS <- function( u, eta, alpha, theta, beta, cv = NULL, v = NU
   Finv <- ipnts(eta, param)
   res <- (exp((1i*u+rho)*Finv)*chf_stdNTS(-u+rho*1i, param))
   res <- res*psi_stdNTS(-u+1i*rho, alpha, theta, beta)
-  #res <- res*(1/(rho*1i-u)^2+(cv+v)/(u*1i+rho))
-  res <- res*(1/(rho*1i-u)^2)
+  res <- res*(1/(rho*1i-u)^2+(cv+v)/(u*1i+rho))
   return(res)
 }
 
@@ -377,15 +397,18 @@ dCVaRstdNTS_numint <- function( eta, alpha, theta, beta, cv = NULL, v = NULL, N 
 
   if (is.null(cv)) cv <-  cvarnts(eps = eta, ntsparam = c(alpha, theta, beta))
   if (is.null(v)) v <- ipnts(u = eta, ntsparam = c(alpha, theta, beta))
-  fn <- Re(pracma::integral(functional::Curry(integrand_dCVaRstdNTS,
-                                              eta = eta,
-                                              alpha = alpha,
-                                              theta = theta,
-                                              beta = beta,
-                                              cv = cv,
-                                              v = v,
-                                              rho = rho),
-                            0, N))
+  
+  #fn <- Re(pracma::integral(functional::Curry(integrand_dCVaRstdNTS,
+  #                                            eta = eta,
+  #                                            alpha = alpha,
+  #                                            theta = theta,
+  #                                            beta = beta,
+  #                                            cv = cv,
+  #                                            v = v,
+  #                                            rho = rho),
+  #                          0, N))
+  integrand <- function(u) integrand_dCVaRstdNTS(u, eta = eta, alpha = alpha, theta = theta, beta = beta, cv = cv, v = v, rho = rho)
+  fn <- Re(pracma::integral(integrand, 0, N))
   dcvar <- -fn/(pi*eta)
   return( dcvar )
 }

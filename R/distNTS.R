@@ -319,11 +319,16 @@ fitnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 0
     y = Femp(x)
   }
 
-  ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
+  #ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
+  #                       lower = c(0.0001, 0.0001, -0.9999),
+  #                       upper = c(1.9999,  1000, 0.9999),
+  #                       control = nloptr::nl.opts(list(maxeval = maxeval)))
+  objfn <- function(ntsparam) llhfnts(ntsparam, x = x, cemp = y, dispF = 0)
+  ntsp <- nloptr::bobyqa(init, objfn,
                          lower = c(0.0001, 0.0001, -0.9999),
                          upper = c(1.9999,  1000, 0.9999),
                          control = nloptr::nl.opts(list(maxeval = maxeval)))
-
+  
   ntsp$par[3] <- ntsp$par[3]*sz(ntsp$par[1], ntsp$par[2])
   retparam <- change_stdntsparam2ntsparam(ntsp$par, mu, sig, 1)
   retparam  <- retparam[1:5]
@@ -407,11 +412,15 @@ fitstdnts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag 
     #y <- pkden(x,rawdat)
   }
 
-  ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
+  #ntsp <- nloptr::bobyqa(init, functional::Curry(llhfnts, x = x, cemp = y, dispF = 0),
+  #                       lower = c(0.0001, 0.0001, -0.9999),
+  #                       upper = c(1.9999,  1000, 0.9999),
+  #                       control = nloptr::nl.opts(list(maxeval = maxeval)))
+  objfn <- function(ntsparam) llhfnts(ntsparam, x = x, cemp = y, dispF = 0)
+  ntsp <- nloptr::bobyqa(init, objfn,
                          lower = c(0.0001, 0.0001, -0.9999),
                          upper = c(1.9999,  1000, 0.9999),
                          control = nloptr::nl.opts(list(maxeval = maxeval)))
-
   ntsp$par[3]  <-  ntsp$par[3]*sz(ntsp$par[1], ntsp$par[2])
   stdntsparam <-  c(ntsp$par[1],ntsp$par[2],ntsp$par[3])
   names(stdntsparam) <- c("alpha", "theta", "beta")

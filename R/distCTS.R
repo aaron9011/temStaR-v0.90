@@ -59,7 +59,8 @@ fitcts <- function( rawdat, initialparam = NaN, maxeval = 100, ksdensityflag = 1
     y <- pkden(x,obs)
   }
 
-  ctsp <- nloptr::bobyqa(init, functional::Curry(llhfcts, x = x, cemp = y),
+  objfn <- function(param) llhfcts(param, x = x, cemp = y)
+  ctsp <- nloptr::bobyqa(init, objfn,
                  lower = c(0.0001, 0.0001, 0.0001),
                  upper = c(1.999,  1000, 1000),
                  control = nl.opts(list(maxeval = maxeval)))

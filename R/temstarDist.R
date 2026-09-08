@@ -108,8 +108,14 @@ invcdf_FFT_GilPelaez <- function(u, param, chf, maxmin, du, dz = 2^-12, m = 2^17
 integrandavar <- function( x, param, VaR, rho, chf){
   (exp(-1i*x*VaR)*chf(-x+rho*1i, param)/(rho*1i-x)^2)
 }
+#avar_numint <- function( eps, VaR, param, chf, N = 10000, rho = 0.0001 ){
+#  f <- Re(pracma::integral(functional::Curry(integrandavar, param = param, VaR = VaR, rho = rho, chf = chf), 0, N))
+#  avar <- VaR-exp(-VaR*rho)*f/(pi*eps)
+#  return( avar )
+#}
 avar_numint <- function( eps, VaR, param, chf, N = 10000, rho = 0.0001 ){
-  f <- Re(pracma::integral(functional::Curry(integrandavar, param = param, VaR = VaR, rho = rho, chf = chf), 0, N))
+  integrand <- function(x) integrandavar(x, param = param, VaR = VaR, rho = rho, chf = chf)
+  f <- Re(pracma::integral(integrand, 0, N))
   avar <- VaR-exp(-VaR*rho)*f/(pi*eps)
-  return( avar )
+  return(avar)
 }

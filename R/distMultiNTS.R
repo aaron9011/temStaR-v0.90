@@ -193,7 +193,7 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, PDflag 
   athb <- matrix(nrow = n, ncol = 3)
   if (is.null(alphaNtheta)){
     for( k in 1:n ){
-      stdntsparam <- fitstdnts(stdRetData[,k])
+      stdntsparam <- fitstdnts(stdRetData[,k], initialparam = NaN, maxeval = 100, ksdensityflag = 0)
       athb[k,1] <- stdntsparam[1]
       athb[k,2] <- stdntsparam[2]
       athb[k,3] <- stdntsparam[3]
@@ -222,8 +222,8 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, PDflag 
 }
 
 #' @export
-#' @title fitmnts_par
-#' @description \code{fitmnts_par} fit parameters
+#' @title fitmnts
+#' @description \code{fitmnts} fit parameters
 #' of the n-dimensional NTS distribution. A parallel version of fitmnts()
 #'
 #' @examples
@@ -252,7 +252,7 @@ fitmnts <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, PDflag 
 #' res <- fitmnts_par( returndata = returndata, n=2, parallelSocketCluster = cl )
 #' stopCluster(cl)
 #'
-fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, parallelSocketCluster = NULL, PDflag = TRUE, ksdensityflag = 0 ){
+fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, parallelSocketCluster = NULL, PDflag = TRUE ){
   flag_sock  <- FALSE
   if (is.null(parallelSocketCluster)){
     numofcluster  <- detectCores()
@@ -290,9 +290,7 @@ fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, par
 
     res_par <- foreach(k = 1:n) %dopar% {
       library(temStaR)
-      library(spatstat)
-      #library(spatstat.core)
-      stdntsparam <- fitstdnts(stdRetData[,k],ksdensityflag = 0)
+      stdntsparam <- fitstdnts(stdRetData[,k])
       return(stdntsparam)
     }
 
@@ -308,8 +306,6 @@ fitmnts_par <- function( returndata, n, alphaNtheta = NULL, stdflag = FALSE, par
 
   bet_par <- foreach(k = 1:n) %dopar% {
     library(temStaR)
-    library(spatstat)
-    #library(spatstat.core)
     beta <- fitstdntsFixAlphaThata(stdRetData[,k], alpha = strPMNTS$alpha, theta = strPMNTS$theta)
     return(beta)
   }
@@ -373,7 +369,7 @@ changeCovMtx2Rho <- function(CovMtx, alpha, theta, betaVec, PDflag = TRUE){
 #' @title fitstdntsFixAlphaThata
 #' @description Fit beta of stdNTS distribution with fixed alpha and theta.
 #'
-fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, maxeval = 100, ksdensityflag = 0){
+fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, maxeval = 100, ksdensityflag = 1){
   if (is.nan(sum(initialparam))){
     init <- 0
   } else {
@@ -391,18 +387,25 @@ fitstdntsFixAlphaThata <- function( rawdat, alpha, theta, initialparam = NaN, ma
     y <- cdfks(x)
   }
 
-  ntsp <- nloptr::bobyqa(init,
-                         functional::Curry(
-                           llhfntsFixAlphaTheta,
-                           alpha = alpha,
-                           theta = theta,
-                           x = x,
-                           cemp = y,
-                           dispF = 0),
+  #ntsp <- nloptr::bobyqa(init,
+  #                       functional::Curry(
+  #                         llhfntsFixAlphaTheta,
+  #                         alpha = alpha,
+  #                         theta = theta,
+  #                         x = x,
+  #                         cemp = y,
+  #                         dispF = 0),
+  #                       lower = -0.9999,
+  #                       upper = 0.9999,
+  #                       control = nloptr::nl.opts(list(maxeval = maxeval)))
+  
+  objfn <- function(betaparam) llhfntsFixAlphaTheta(betaparam, alpha = alpha, theta = theta, x = x, cemp = y, dispF = 0)
+  
+  ntsp <- nloptr::bobyqa(init, objfn,
                          lower = -0.9999,
                          upper = 0.9999,
                          control = nloptr::nl.opts(list(maxeval = maxeval)))
-
+  
   beta  <-  ntsp$par*sz(alpha, theta)
   return( beta )
 }
@@ -646,16 +649,19 @@ dMultiStdNTS <- function( x, st, subTS = NULL ){
   gamma <- as.numeric(sqrt(1-(2-st$alpha)/(2*st$theta)*st$beta^2))
   sig0 <- (cbind(gamma)%*%rbind(gamma))*st$Rho
 
-  d <- pracma::quad(
-    functional::Curry(func_indegrand,
-                      x = x,
-                      beta = st$beta,
-                      sig0 = sig0,
-                      ti = ti,
-                      subtsi = subtsi),
-    xa = 0,
-    xb = max(ti)
-  )
+  #d <- pracma::quad(
+  #  functional::Curry(func_indegrand,
+  #                    x = x,
+  #                    beta = st$beta,
+  #                    sig0 = sig0,
+  #                    ti = ti,
+  #                    subtsi = subtsi),
+  #  xa = 0,
+  #  xb = max(ti)
+  #)
+  integrand <- function(t) func_indegrand(t, x = x, beta = st$beta, sig0 = sig0, ti = ti, subtsi = subtsi)
+  d <- pracma::quad(integrand, xa = 0, xb = max(ti))
+  
   return(d)
 }
 
@@ -695,15 +701,18 @@ pMultiStdNTS <- function( x, st, subTS = NULL ){
   ti <- subTS$ti
   subtsi <- subTS$subtsi
 
-  p <- pracma::quad(
-    functional::Curry(func_indegrand_cdf,
-                      x = x,
-                      st = st,
-                      ti = ti,
-                      subtsi = subtsi),
-    xa = 0,
-    xb = max(ti)
-  )
+  #p <- pracma::quad(
+  #  functional::Curry(func_indegrand_cdf,
+  #                    x = x,
+  #                    st = st,
+  #                    ti = ti,
+  #                    subtsi = subtsi),
+  #  xa = 0,
+  #  xb = max(ti)
+  #)
+  integrand <- function(t) func_indegrand_cdf(t, x = x, st = st, ti = ti, subtsi = subtsi)
+  p <- pracma::quad(integrand, xa = 0, xb = max(ti))
+  
   p[p>1]=1
   return(p)
 }

@@ -10,7 +10,7 @@ fitstdntsFixAlphaThata(
   theta,
   initialparam = NaN,
   maxeval = 100,
-  ksdensityflag = 0
+  ksdensityflag = 1
 )
 }
 \description{
